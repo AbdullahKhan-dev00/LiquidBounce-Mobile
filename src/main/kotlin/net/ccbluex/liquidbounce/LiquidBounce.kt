@@ -34,6 +34,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import net.ccbluex.liquidbounce.api.core.ApiConfig
 import net.ccbluex.liquidbounce.api.core.ioScope
 import net.ccbluex.liquidbounce.api.models.auth.ClientAccount
+import net.ccbluex.liquidbounce.api.services.auth.isInvalidGrant
 import net.ccbluex.liquidbounce.api.services.client.ClientUpdate
 import net.ccbluex.liquidbounce.api.thirdparty.IpInfoApi
 import net.ccbluex.liquidbounce.config.ConfigSystem
@@ -357,12 +358,13 @@ object LiquidBounce : EventListener {
                         ClientAccountManager.clientAccount.renew()
                     }.onFailure {
                         logger.error("Failed to renew client account token.", it)
-                        ClientAccountManager.clientAccount = ClientAccount.EMPTY_ACCOUNT
+                        if (it.isInvalidGrant) {
+                            ClientAccountManager.clientAccount = ClientAccount.EMPTY_ACCOUNT
+                            ConfigSystem.store(ClientAccountManager)
+                        }
                     }.onSuccess {
                         logger.info("Successfully renewed client account token.")
                     }
-
-                    ConfigSystem.store(ClientAccountManager)
                 }
             }
         }
