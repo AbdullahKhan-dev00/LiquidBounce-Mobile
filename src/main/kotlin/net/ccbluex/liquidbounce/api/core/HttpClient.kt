@@ -29,11 +29,11 @@ import net.ccbluex.liquidbounce.api.interceptors.CacheBlacklistInterceptor
 import net.ccbluex.liquidbounce.authlib.Authlib
 import net.ccbluex.liquidbounce.authlib.interceptor.DefaultHeaderInterceptor
 import net.ccbluex.liquidbounce.config.gson.util.readJson
-import net.ccbluex.liquidbounce.mcef.listeners.OkHttpProgressInterceptor
 import net.ccbluex.liquidbounce.utils.client.error.ErrorHandler
 import net.ccbluex.liquidbounce.utils.client.logger
 import net.ccbluex.liquidbounce.utils.kotlin.Minecraft
 import net.ccbluex.liquidbounce.utils.render.readNativeImage
+import net.ccbluex.liquidbounce.utils.network.OkHttpProgressInterceptor
 import net.minecraft.ReportedException
 import net.minecraft.util.Util
 import okhttp3.Cache
@@ -59,7 +59,6 @@ import java.util.Locale
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
-import net.ccbluex.liquidbounce.mcef.utils.FileUtils as McefFileUtils
 
 val renderScope = CoroutineScope(
     Dispatchers.Minecraft + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
@@ -128,7 +127,7 @@ object HttpClient {
         .addInterceptor(CacheBlacklistInterceptor(setOf("localhost", "127.0.0.1")))
         .addInterceptor(DefaultHeaderInterceptor("User-Agent", DEFAULT_AGENT, skipIfExists = true))
         .build().also {
-            McefFileUtils.setOkHttpClient(it)
+
             Authlib.client = it
         }
 

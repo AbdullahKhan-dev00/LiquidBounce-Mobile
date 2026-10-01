@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.BrowserReadyEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.integration.backend.backends.cef.CefBrowserBackend
 import net.ccbluex.liquidbounce.integration.backend.backends.external.ExternalSystemBrowserBackend
 import net.ccbluex.liquidbounce.integration.backend.browser.GlobalBrowserSettings
 import net.ccbluex.liquidbounce.integration.interop.persistant.PersistentLocalStorage
@@ -70,7 +69,7 @@ object BrowserBackendManager : EventListener {
                 isSkipping = true
                 return
             }
-            "cef" -> CefBrowserBackend()
+            
             "external" -> ExternalSystemBrowserBackend()
             else -> error("Unknown browser backend: $backendName")
         }
@@ -79,8 +78,7 @@ object BrowserBackendManager : EventListener {
     }
 
     /**
-     * Initializes the browser.
-     */
+     * Initializes the browser     */
     fun start() {
         // Ensure that the browser is available
         logger.info("Initializing browser...")
